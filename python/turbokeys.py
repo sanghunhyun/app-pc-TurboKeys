@@ -127,6 +127,10 @@ PHYSICAL_KEYS = {
     'k2_left': 16, 'knob2_left': 16, 'knob2_ccw': 16,
     'k2_press': 17, 'knob2_press': 17, 'knob2_click': 17,
     'k2_right': 18, 'knob2_right': 18, 'knob2_cw': 18,
+    # Knob 3 (if present)
+    'k3_left': 19, 'knob3_left': 19, 'knob3_ccw': 19,
+    'k3_press': 20, 'knob3_press': 20, 'knob3_click': 20,
+    'k3_right': 21, 'knob3_right': 21, 'knob3_cw': 21,
 }
 
 
@@ -235,6 +239,10 @@ class MiniKeyboard:
             layer = 1
         return self._write_report([0xA1, layer, 0, 0, 0, 0, 0, 0])
 
+    def switch_layer(self, layer: int) -> bool:
+        """Public method to switch active layer on the device"""
+        return self._send_layer_switch(layer)
+
     def _send_flash_command(self, is_led: bool = False) -> bool:
         """Send command to write configuration to flash"""
         second_byte = 0xA1 if is_led else 0xAA
@@ -274,8 +282,14 @@ class MiniKeyboard:
             type_byte = (layer << 4) | (key_type & 0x0F)
 
         # Send the key mapping
-        data = [physical_key, type_byte, 1, 0, modifiers, keycode, 0, 0]
-        if not self._write_report(data):
+        # Packet 0 (Header): [key, type_byte, seq_count=1, index=0, modifiers, 0, 0, 0]
+        pkt0 = [physical_key, type_byte, 1, 0, modifiers, 0, 0, 0]
+        if not self._write_report(pkt0):
+            return False
+
+        # Packet 1 (Keycode): [key, type_byte, seq_count=1, index=1, modifiers, keycode, 0, 0]
+        pkt1 = [physical_key, type_byte, 1, 1, modifiers, keycode, 0, 0]
+        if not self._write_report(pkt1):
             return False
 
         # Write to flash

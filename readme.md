@@ -6,7 +6,7 @@
   </picture>
 </p>
 
-Turbo Keys is a **free, open source** configuration tool for cheap programmable macro keyboards (CH552/CH57x based) sold on Amazon, AliExpress, Wish, Temu, etc. A safe alternative to the dodgy vendor software with a beautiful GUI.
+DIY Keys is a **free, open source** configuration tool for cheap programmable macro keyboards (CH552/CH57x based) sold on Amazon, AliExpress, Wish, Temu, etc. A safe alternative to the dodgy vendor software with a beautiful GUI.
 
 **Macro keyboard** | **Programmable keys** | **Cross-platform** | **Open source** | **No bloatware**
 
@@ -51,11 +51,11 @@ python turbokeys.py set knob1_cw volup      # Knob clockwise = volume up
 python turbokeys.py led 1                   # Set LED mode
 ```
 
-### Python GUI (Coming Soon)
+### Python Modern GUI (Cross-Platform: Windows, macOS, Linux)
 
 ```bash
-pip install hidapi PyQt6
-python turbokeys-gui.py
+pip install -r python/requirements.txt
+python python/turbokeys_gui.py
 ```
 
 ## Documentation
